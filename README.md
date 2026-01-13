@@ -1,6 +1,11 @@
-# @intility/require-i18n-default
+<h1 align="center">
+  <img src="https://avatars.githubusercontent.com/u/35199565" width="124px"/><br/>
+  @intility/require-i18n-default
+</h1>
 
+<p align="center">
 Deno lint plugin to enforce default values in i18next translation functions and components.
+</p>
 
 ## Installation
 
