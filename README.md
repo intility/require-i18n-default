@@ -1,50 +1,81 @@
 <h1 align="center">
   <img src="https://avatars.githubusercontent.com/u/35199565" width="124px"/><br/>
-  @intility/require-i18n-default
+  @intility/oxlint-plugin-require-i18n-default
 </h1>
 
 <p align="center">
-Deno lint plugin to enforce default values in i18next translation functions and components.
+Oxlint plugin to enforce default values in i18next translation functions and components.
 </p>
 
 ## Installation
 
-Add the plugin to your `deno.json`:
+```sh
+pnpm add -D @intility/oxlint-plugin-require-i18n-default
+```
+
+Add the plugin and rules to your `.oxlintrc.json`:
 
 ```json
 {
-  "lint": {
-    "plugins": ["jsr:@intility/require-i18n-default"],
-    "rules": {
-      "include": [
-        "require-translation-default/require-default-value",
-        "require-translation-default/require-trans-default"
-      ]
-    }
+  "jsPlugins": ["@intility/oxlint-plugin-require-i18n-default"],
+  "rules": {
+    "i18n-default/require-default-value": "error",
+    "i18n-default/require-trans-default": "error"
   }
 }
 ```
 
+Or with `oxlint.config.ts`:
+
+```ts
+import { defineConfig } from "oxlint";
+
+export default defineConfig({
+  jsPlugins: ["@intility/oxlint-plugin-require-i18n-default"],
+  rules: {
+    "i18n-default/require-default-value": "error",
+    "i18n-default/require-trans-default": "error",
+  },
+});
+```
+
+For Vite+ projects, use the `lint` block in `vite.config.ts` instead:
+
+```ts
+import { defineConfig } from "vite-plus";
+
+export default defineConfig({
+  lint: {
+    jsPlugins: ["@intility/oxlint-plugin-require-i18n-default"],
+    rules: {
+      "i18n-default/require-default-value": "error",
+      "i18n-default/require-trans-default": "error",
+    },
+  },
+});
+```
+
 ## Rules
 
-### `require-translation-default/require-default-value`
+### `i18n-default/require-default-value`
 
 Ensures `t()` function calls include a default value.
 
 ```tsx
 // Invalid
-t('greeting.hello')
-t('greeting.hello', { ns: 'common' })
-t(`prefix.${key}`)
-i18n.t('greeting.hello')
+t("greeting.hello");
+t("greeting.hello", { ns: "common" });
+t(`prefix.${key}`);
+i18n.t("greeting.hello");
 
 // Valid
-t('greeting.hello', 'Hello')
-t('greeting.hello', { defaultValue: 'Hello' })
-t('greeting.hello', { defaultValue: 'Hello', ns: 'common' })
+t("greeting.hello", "Hello");
+t("greeting.hello", { defaultValue: "Hello" });
+t("greeting.hello", { defaultValue: "Hello", ns: "common" });
+t("greeting.hello", options);
 ```
 
-### `require-translation-default/require-trans-default`
+### `i18n-default/require-trans-default`
 
 Ensures `<Trans>` components include a `defaults` prop.
 
@@ -56,12 +87,16 @@ Ensures `<Trans>` components include a `defaults` prop.
 <Trans i18nKey="greeting" defaults="Hello World">Hello World</Trans>
 ```
 
-## Ignoring Specific Cases
+## Ignoring specific cases
 
 ```tsx
-// deno-lint-ignore require-translation-default/require-default-value
-const text = t('dynamic.key');
+// oxlint-disable i18n-default/require-default-value
+const text = t("dynamic.key");
 
-// deno-lint-ignore require-translation-default/require-trans-default
-<Trans i18nKey="key">Content</Trans>
+// oxlint-disable i18n-default/require-trans-default
+<Trans i18nKey="key">Content</Trans>;
 ```
+
+## Note
+
+The Oxlint JS plugin API is in alpha. Pin the `oxlint` version in projects that use this plugin.
